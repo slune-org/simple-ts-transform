@@ -1,0 +1,63 @@
+{
+  "name": "simple-ts-transform",
+  "version": "1.0.0",
+  "description": "Library to help create simple typescript transformers",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "type": "commonjs",
+  "files": [
+    "dist/**",
+    "!dist/__test__/**",
+    "!dist/**/*.spec.*",
+    "!dist/**/*.map"
+  ],
+  "scripts": {
+    "prepublishOnly": "npm run all",
+    "all": "npm run clean && npm run test && npm run build",
+    "test": "npm run test:lint && npm run test:dep && npm run test:unit",
+    "test:lint": "eslint 'src/**/*.ts'",
+    "test:dep": "depcheck",
+    "test:unit": "nyc mocha 'src/**/*.spec.ts'",
+    "build": "npm run build:main",
+    "build:main": "tsc",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "typescript",
+    "transform",
+    "library",
+    "simple"
+  ],
+  "author": "Slune",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slune-org/simple-ts-transform.git"
+  },
+  "peerDependencies": {
+    "typescript": "^3.0.0"
+  },
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "1.0.1",
+    "@types/chai": "4.2.8",
+    "@types/mocha": "7.0.1",
+    "@typescript-eslint/eslint-plugin": "2.19.0",
+    "@typescript-eslint/parser": "2.19.0",
+    "chai": "4.2.0",
+    "depcheck": "0.9.2",
+    "eslint": "6.8.0",
+    "eslint-config-prettier": "6.10.0",
+    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-jsdoc": "21.0.0",
+    "eslint-plugin-node": "11.0.0",
+    "eslint-plugin-prettier": "3.1.2",
+    "mocha": "7.0.1",
+    "nyc": "15.0.0",
+    "prettier": "1.19.1",
+    "rimraf": "3.0.1",
+    "source-map-support": "0.5.16",
+    "ts-node": "8.6.2",
+    "ts-transform-test-compiler": "1.0.0",
+    "typescript": "3.7.5"
+  }
+}

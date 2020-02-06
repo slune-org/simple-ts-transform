@@ -1,0 +1,7 @@
+---
+specials:
+  - bin
+  - eslint
+  - istanbul
+  - mocha
+  - prettier

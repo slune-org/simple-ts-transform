@@ -1,0 +1,16 @@
+# Distributable
+node_modules/
+dist/
+
+# Coverage
+.nyc_output/
+coverage/
+
+# Package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+*.code-workspace
+.vscode/
