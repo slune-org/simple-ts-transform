@@ -6,7 +6,6 @@ parser: '@typescript-eslint/parser'
 parserOptions:
   project: tsconfig.json
 plugins:
-  - import
   - prettier
 settings:
   jsdoc:
@@ -16,7 +15,6 @@ extends:
   - plugin:node/recommended
   - plugin:@typescript-eslint/eslint-recommended
   - plugin:@typescript-eslint/recommended
-  - plugin:import/errors
   - plugin:import/warnings
   - plugin:import/typescript
   - plugin:jsdoc/recommended
@@ -54,7 +52,6 @@ rules:
   no-console: warn
   no-eval: error
   '@typescript-eslint/no-explicit-any': 'off'
-  import/no-cycle: error
   no-extra-bind: error
   import/no-extraneous-dependencies:
     - error

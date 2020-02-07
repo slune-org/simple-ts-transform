@@ -15,7 +15,7 @@
     "prepublishOnly": "npm run all",
     "all": "npm run clean && npm run test && npm run build",
     "test": "npm run test:lint && npm run test:dep && npm run test:unit",
-    "test:lint": "eslint 'src/**/*.ts'",
+    "test:lint": "eslint --config .eslintrc.full.yaml 'src/**/*.ts'",
     "test:dep": "depcheck",
     "test:unit": "nyc mocha 'src/**/*.spec.ts'",
     "build": "npm run build:main",
