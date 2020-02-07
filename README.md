@@ -115,3 +115,27 @@ import OtherVisitor from './OtherVisitor'
 const transformer = buildTransformer(MyContext, [MyFileNameInserter, OtherVisitor])
 export default transformer
 ```
+
+## Call
+
+There is currently no way of declaring a transformer in the vanilla _TypeScript_ compiler. If you do not want to write your own compiler using the `typescript` API, you can use the [ttypescript](https://www.npmjs.com/package/ttypescript) wrapper. The configuration then is made in `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "transform": "my-transformer",
+        "my-config-entry": "hello",
+        "another-config": true
+      }
+    ]
+  }
+}
+```
+
+Note that the built transformer is of type `program` which is the default for `ttypescript`. That's why you don't need to add a `type` entry in the configuration.
+
+# Contributions
+
+Even though we cannot guarantee a response time, please feel free to file an issue if you have any question or problem using the package. Pull request are also welcome.
