@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "ES2018",
     "moduleResolution": "node",
+    "esModuleInterop": false,
     "module": "CommonJS",
+    "baseUrl": ".",
     "rootDir": "src",
     "outDir": "dist",
     "declaration": true,
@@ -11,6 +13,7 @@
     "noImplicitReturns": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
+    "importsNotUsedAsValues": "error",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },

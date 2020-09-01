@@ -1,6 +1,6 @@
 # simple-ts-transform - Bibliothèque d'aide à la création de transformateurs typescript simples
 
-Ce paquet fourni une API simple pour construire des tranformateurs _TypeScript_, basés sur un contexte partagé et plusieurs visiteurs de nœuds.
+Ce paquet fourni une API simple pour construire des transformateurs _TypeScript_, basés sur un contexte partagé et plusieurs visiteurs de nœuds.
 
 Pour des exemples d'utilisation, vous pouvez regarder:
 
@@ -13,22 +13,16 @@ Vous pourriez également être intéressé par:
 
 # Langue
 
-Slune étant une entreprise française, vous trouverez tous les documents et messages en français. Les autres traductions sont bienvenues.
+Les documents et messages, le code (y compris les noms de variable et commentaires), sont en anglais.
 
-Cependant, l'anglais étant la langue de la programmation, le code, y compris les noms de variable et commentaires, sont en anglais.
+Cependant, Slune étant une entreprise française, tous les documents et messages importants doivent également être fournis en français. Les autres traductions sont bienvenues.
 
 # Installation
 
-L'installation se fait avec la commande `npm install` :
+L’installation se fait avec la commande `npm install` :
 
 ```bash
 $ npm install --save simple-ts-transform
-```
-
-Si vous préférez utiliser `yarn` :
-
-```bash
-$ yarn add simple-ts-transform
 ```
 
 # Utilisation
@@ -40,22 +34,24 @@ Tout d'abord, créez la classe de contexte. Vous pouvez y mettre tout ce dont vo
 Le constructeur de la classe de contexte sera appelé avec :
 
 - un paramètre `ts.Program`,
-- un objet `any` contenant la configuration fournie au transformateur.
+- un objet `unknown` contenant la configuration fournie au transformateur.
 
 La classe de contexte doit également implémenter la méthode `initNewFile(context: TransformationContext, sourceFile: SourceFile): void`, appelée avant de visiter chaque nouveau fichier.
 
 ```typescript
 // MyContext.ts
-import { NodeVisitorContext } from 'simple-ts-transform'
-import { Program, SourceFile, TransformationContext } from 'typescript'
+import type { NodeVisitorContext } from 'simple-ts-transform'
+import type { NodeFactory, Program, SourceFile, TransformationContext } from 'typescript'
 
 export default class MyContext implements NodeVisitorContext {
   public readonly basePath: string
-  public fileName?: string
-  public constructor(program: Program, public readonly configuration: any) {
+  public factory!: NodeFactory
+  public fileName!: string
+  public constructor(program: Program, public readonly _configuration: unknown) {
     this.basePath = program.getCompilerOptions().rootDir || program.getCurrentDirectory()
   }
-  public initNewFile(_context: TransformationContext, sourceFile: SourceFile): void {
+  public initNewFile(context: TransformationContext, sourceFile: SourceFile): void {
+    this.factory = context.factory
     this.fileName = sourceFile.fileName
   }
 }
@@ -76,8 +72,10 @@ Votre visiteur doit implémenter les méthodes suivantes :
 
 ```typescript
 // MyFileNameInserter.ts
-import { NodeVisitor } from 'simple-ts-transform'
-import { Node, StringLiteral } from 'typescript'
+import type { NodeVisitor } from 'simple-ts-transform'
+import type { Node, StringLiteral } from 'typescript'
+import { isStringLiteral } from 'typescript'
+import type { MyContext } from './MyContext'
 
 export default class MyFileNameInserter implements NodeVisitor<StringLiteral> {
   private readonly fileName: string
@@ -88,6 +86,7 @@ export default class MyFileNameInserter implements NodeVisitor<StringLiteral> {
     return isStringLiteral(node)
   }
   public visit(node: StringLiteral) {
+    const { createStringLiteral } = this.context.factory
     return [createStringLiteral(this.fileName + ': ' + node.getText().slice(1, -1)]
   }
 }
@@ -128,6 +127,8 @@ Il n'y a actuellement pas moyen de déclarer un transformateur dans le compilate
 
 Notez que le transformateur construit est de type `program`, qui est le type par défaut pour `ttypescript`. C'est pour cela qu'il est inutile d'ajouter une entrée `type` dans la configuration.
 
-# Contributions
+# Contribuer
 
-Bien que je ne puisse garantir un temps de réponse, n'hésitez pas à ouvrir un incident si vous avez une question ou un problème pour utiliser ce paquet. Les _Pull Request_ sont également bienvenues.
+Bien que nous ne puissions pas garantir un temps de réponse, n’hésitez pas à ouvrir un incident si vous avez une question ou un problème pour utiliser ce paquet.
+
+Les _Pull Requests_ sont bienvenues. Vous pouvez bien sûr soumettre des corrections ou améliorations de code, mais n’hésitez pas également à améliorer la documentation, même pour de petites fautes d’orthographe ou de grammaire.

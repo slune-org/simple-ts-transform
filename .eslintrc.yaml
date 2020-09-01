@@ -1,10 +1,11 @@
----
 env:
-  node: true
+  shared-node-browser: true
   es6: true
+  es2017: true
 parser: '@typescript-eslint/parser'
 parserOptions:
-  project: tsconfig.json
+  project:
+    - tsconfig.json
 plugins:
   - prettier
 settings:
@@ -21,18 +22,9 @@ extends:
   - prettier
   - prettier/@typescript-eslint
 rules:
-  '@typescript-eslint/array-type':
-    - error
-    - default: array-simple
-      readonly: generic
-  '@typescript-eslint/consistent-type-definitions': error
   curly: error
   dot-notation: error
   eqeqeq: error
-  '@typescript-eslint/explicit-function-return-type': 'off'
-  '@typescript-eslint/explicit-member-accessibility':
-    - error
-    - accessibility: explicit
   id-blacklist:
     - error
     - any
@@ -44,47 +36,29 @@ rules:
     - boolean
     - Undefined
   id-match: error
-  '@typescript-eslint/interface-name-prefix': 'off'
   max-classes-per-file: 'off'
-  jsdoc/newline-after-description: error
   no-bitwise: 'off'
   no-caller: error
   no-console: warn
   no-eval: error
-  '@typescript-eslint/no-explicit-any': 'off'
   no-extra-bind: error
-  import/no-extraneous-dependencies:
-    - error
-    - optionalDependencies: false
-      devDependencies:
-        - '**/*.spec.ts'
-  import/no-internal-modules: error
   no-invalid-this: 'off'
-  node/no-missing-import: 'off'
   no-new-wrappers: error
-  '@typescript-eslint/no-non-null-assertion': 'off'
-  '@typescript-eslint/no-parameter-properties': 'off'
   no-restricted-syntax:
     - error
     - SequenceExpression
   no-return-await: error
-  import/no-self-import: error
   no-shadow:
     - error
     - hoist: all
   no-template-curly-in-string: error
   no-throw-literal: error
-  jsdoc/no-types: error
   no-undef-init: error
-  node/no-unsupported-features/es-syntax: 'off'
   no-unused-expressions:
     - error
     - allowShortCircuit: true
-  '@typescript-eslint/no-unused-vars':
-    - error
-    - argsIgnorePattern: '^_'
-      ignoreRestSiblings: true
-  '@typescript-eslint/no-use-before-define': 'off'
+      allowTernary: true
+      allowTaggedTemplates: true
   object-shorthand: error
   one-var:
     - error
@@ -92,18 +66,71 @@ rules:
   prefer-arrow-callback:
     - error
     - allowUnboundThis: false
-  '@typescript-eslint/prefer-for-of': error
-  '@typescript-eslint/prefer-function-type': error
   prefer-object-spread: error
-  prettier/prettier: warn
   radix: error
   require-atomic-updates: 'off'
-  jsdoc/require-description-complete-sentence: warn
+  spaced-comment: warn
+  valid-typeof: 'off'
+  space-in-parens: error
+  '@typescript-eslint/array-type':
+    - error
+    - default: array-simple
+      readonly: generic
+  '@typescript-eslint/consistent-type-definitions': error
+  '@typescript-eslint/explicit-function-return-type':
+    - error
+    - allowExpressions: true
+      allowTypedFunctionExpressions: true
+  '@typescript-eslint/explicit-member-accessibility':
+    - error
+    - accessibility: explicit
+  '@typescript-eslint/interface-name-prefix': 'off'
+  '@typescript-eslint/no-explicit-any': 'off'
+  '@typescript-eslint/no-non-null-assertion': 'off'
+  '@typescript-eslint/no-parameter-properties': 'off'
+  '@typescript-eslint/no-unused-vars':
+    - error
+    - argsIgnorePattern: '^_'
+      ignoreRestSiblings: true
+  '@typescript-eslint/no-use-before-define':
+    - error
+    - functions: false
+      classes: true
+      enums: false
+      variables: false
+      typedefs: false
+  '@typescript-eslint/prefer-for-of': error
+  '@typescript-eslint/prefer-function-type': error
+  '@typescript-eslint/unified-signatures': warn
+  import/no-extraneous-dependencies:
+    - warn
+    - optionalDependencies: false
+      devDependencies:
+        - '**/*.spec.ts'
+  import/no-internal-modules: warn
+  import/no-self-import: error
+  import/order:
+    - warn
+    - groups:
+        - - builtin
+          - external
+        - internal
+      newlines-between: always
+      alphabetize:
+        order: asc
+        caseInsensitive: true
+  jsdoc/newline-after-description: warn
+  jsdoc/no-types: warn
+  jsdoc/no-undefined-types: 'off'
+  jsdoc/require-description-complete-sentence:
+    - warn
+    - abbreviations:
+        - i.e.
+        - e.g.
   jsdoc/require-hyphen-before-param-description: warn
   jsdoc/require-jsdoc: 'off'
   jsdoc/require-param-type: 'off'
   jsdoc/require-returns-type: 'off'
-  spaced-comment: error
-  valid-typeof: 'off'
-  space-in-parens: error
-  '@typescript-eslint/unified-signatures': error
+  node/no-missing-import: 'off'
+  node/no-unsupported-features/es-syntax: 'off'
+  prettier/prettier: warn
