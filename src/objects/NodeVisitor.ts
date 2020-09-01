@@ -1,6 +1,6 @@
-import { Node } from 'typescript'
+import type { Node } from 'typescript'
 
-import NodeVisitorContext from './NodeVisitorContext'
+import type NodeVisitorContext from './NodeVisitorContext'
 
 /**
  * A visitor to use on an AST node.

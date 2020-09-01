@@ -1,4 +1,4 @@
-import { Program, SourceFile, TransformationContext } from 'typescript'
+import type { Program, SourceFile, TransformationContext } from 'typescript'
 
 /**
  * The context for the node visitor.
@@ -21,5 +21,5 @@ export default interface NodeVisitorContext {
  */
 export type NodeVisitorContextType<C extends NodeVisitorContext> = new (
   program: Program,
-  configuration: any
+  configuration: unknown
 ) => C

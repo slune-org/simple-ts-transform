@@ -1,35 +1,31 @@
 /* eslint-disable prefer-arrow-callback, no-unused-expressions */
 import { expect } from 'chai'
 import Compiler from 'ts-transform-test-compiler'
-import {
+import type {
   ExportAssignment,
   Node,
-  NodeFlags,
   SourceFile,
   StringLiteral,
-  SyntaxKind,
   TransformationContext,
   VariableDeclaration,
-  createIdentifier,
-  createModifier,
-  createStringLiteral,
-  createVariableDeclaration,
-  createVariableDeclarationList,
-  createVariableStatement,
+} from 'typescript'
+import {
+  NodeFlags,
+  SyntaxKind,
   isExportAssignment,
   isSourceFile,
   isStringLiteral,
   isVariableDeclaration,
-  updateSourceFileNode,
 } from 'typescript'
 
-import buildTransformer, { NodeVisitor, NodeVisitorContext } from '.'
+import type { NodeVisitor, NodeVisitorContext } from '.'
+import buildTransformer from '.'
 
 class TestedContext implements NodeVisitorContext {
-  public context?: TransformationContext
-  public sourceFile?: SourceFile
+  public context!: TransformationContext
+  public sourceFile!: SourceFile
   public constructor(_program: any, public readonly configuration: any) {}
-  public initNewFile(context: TransformationContext, sourceFile: SourceFile) {
+  public initNewFile(context: TransformationContext, sourceFile: SourceFile): void {
     this.context = context
     this.sourceFile = sourceFile
   }
@@ -40,19 +36,27 @@ class HelloModifier implements NodeVisitor<StringLiteral> {
   public wants(node: Node): node is StringLiteral {
     return isStringLiteral(node)
   }
-  public visit(node: StringLiteral) {
+  public visit(node: StringLiteral): StringLiteral[] {
+    const { createStringLiteral } = this.context.context.factory
     return [createStringLiteral(node.getText().slice(1, -1) + this.context.configuration.message)]
   }
 }
 
 class TransferValue implements NodeVisitor<VariableDeclaration> {
+  public constructor(private readonly context: TestedContext) {}
   public wants(node: Node): node is VariableDeclaration {
     return isVariableDeclaration(node)
   }
-  public visit(node: VariableDeclaration) {
+  public visit(node: VariableDeclaration): VariableDeclaration[] {
+    const { createIdentifier, createVariableDeclaration } = this.context.context.factory
     return [
       node,
-      createVariableDeclaration(createIdentifier('value'), undefined, createIdentifier('result')),
+      createVariableDeclaration(
+        createIdentifier('value'),
+        undefined,
+        undefined,
+        createIdentifier('result')
+      ),
     ]
   }
 }
@@ -61,18 +65,27 @@ class DeleteExport implements NodeVisitor<ExportAssignment> {
   public wants(node: Node): node is ExportAssignment {
     return isExportAssignment(node)
   }
-  public visit() {
+  public visit(): ExportAssignment[] {
     return []
   }
 }
 
 class AddExport implements NodeVisitor<SourceFile> {
+  public constructor(private readonly context: TestedContext) {}
   public wants(node: Node): node is SourceFile {
     return isSourceFile(node)
   }
-  public visit(node: SourceFile) {
+  public visit(node: SourceFile): SourceFile[] {
+    const {
+      createIdentifier,
+      createModifier,
+      createVariableDeclaration,
+      createVariableDeclarationList,
+      createVariableStatement,
+      updateSourceFile,
+    } = this.context.context.factory
     return [
-      updateSourceFileNode(node, [
+      updateSourceFile(node, [
         ...node.statements,
         createVariableStatement(
           [createModifier(SyntaxKind.ExportKeyword)],
@@ -80,6 +93,7 @@ class AddExport implements NodeVisitor<SourceFile> {
             [
               createVariableDeclaration(
                 createIdentifier('finalValue'),
+                undefined,
                 undefined,
                 createIdentifier('value')
               ),
@@ -92,11 +106,11 @@ class AddExport implements NodeVisitor<SourceFile> {
   }
 }
 
-describe('simple-ts-transform', function() {
+describe('simple-ts-transform', function () {
   this.slow(4000)
   this.timeout(10000)
 
-  it('should create a noop transformer', function() {
+  it('should create a noop transformer', function () {
     const result = new Compiler(buildTransformer(TestedContext, []), 'dist/__test__')
       .setRootDir('__test__')
       .compile('noop', {})
@@ -104,7 +118,7 @@ describe('simple-ts-transform', function() {
     expect(result.requireContent()).to.equal('Hello')
   })
 
-  it('should transform string in file', function() {
+  it('should transform string in file', function () {
     const result = new Compiler(buildTransformer(TestedContext, [HelloModifier]), 'dist/__test__')
       .setRootDir('__test__')
       .compile('world', { message: ' world' })
@@ -112,7 +126,7 @@ describe('simple-ts-transform', function() {
     expect(result.requireContent()).to.equal('Hello world')
   })
 
-  it('should change node counts', function() {
+  it('should change node counts', function () {
     const result = new Compiler(
       buildTransformer(TestedContext, [TransferValue, DeleteExport, AddExport]),
       'dist/__test__'

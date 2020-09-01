@@ -1,6 +1,7 @@
-import { Node, TransformationContext, Visitor, visitEachChild } from 'typescript'
+import type { Node, TransformationContext, Visitor } from 'typescript'
+import { visitEachChild } from 'typescript'
 
-import { NodeVisitor } from '../objects'
+import type { NodeVisitor } from '../objects'
 
 function visit<N extends Node>(nodeVisitor: NodeVisitor<N>, nodes: Node[]): Node[] {
   const nextNodes: Node[] = []
@@ -14,7 +15,7 @@ function visit<N extends Node>(nodeVisitor: NodeVisitor<N>, nodes: Node[]): Node
   return nextNodes
 }
 
-export default function(context: TransformationContext, nodeVisitors: NodeVisitor<any>[]): Visitor {
+export default function (context: TransformationContext, nodeVisitors: NodeVisitor<any>[]): Visitor {
   const visitor: Visitor = node => {
     const newNodes = nodeVisitors.reduce(
       (nodes, nodeVisitor) => {
