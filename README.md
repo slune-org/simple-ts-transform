@@ -88,7 +88,7 @@ import type { MyContext } from './MyContext'
 export default class MyFileNameInserter implements NodeVisitor<StringLiteral> {
   private readonly fileName: string
   public constructor(private readonly context: MyContext) {
-    this.fileName = context.fileName!
+    this.fileName = context.fileName
   }
   public wants(node: Node): node is StringLiteral {
     return isStringLiteral(node)
