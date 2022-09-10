@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ES2021",
     "moduleResolution": "node",
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "module": "CommonJS",
     "baseUrl": ".",
     "rootDir": "src",
